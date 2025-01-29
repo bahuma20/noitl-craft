@@ -39,12 +39,13 @@ class MinecraftService
 
         try {
 
-            $this->k8s->request('PATCH', '/apis/apps/v1/namespaces/' . $namespace . '/statefulsets/' . $statefulset, [
+            $response = $this->k8s->request('PATCH', '/apis/apps/v1/namespaces/' . $namespace . '/statefulsets/' . $statefulset, [
                 'headers' => [
-                    'Content-Type' => ' application/strategic-merge-patch+json',
+                    'Content-Type' => 'application/strategic-merge-patch+json',
                 ]
             ]);
         } catch (TransportExceptionInterface|ClientException $e) {
+            http_send_status(500);
             print 'There was an error starting the server\n\n';
             print 'Exception: ' . $e->getMessage() . '\n\n';
             print 'Status code: ' . $e->getResponse()->getStatusCode() . '\n\n';
