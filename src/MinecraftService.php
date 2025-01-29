@@ -34,7 +34,9 @@ class MinecraftService
         $statefulset = $_ENV['APP_STATEFULSET'];
 
         $response = $this->k8s->request('PATCH', '/apis/apps/v1/namespaces/' . $namespace . '/statefulsets/' . $statefulset, [
-            'Content-Type' => ' application/strategic-merge-patch+json',
+            'headers' => [
+                'Content-Type' => ' application/strategic-merge-patch+json',
+            ]
         ]);
 
         $success = $response->getStatusCode() >= 200 && $response->getStatusCode() < 300;

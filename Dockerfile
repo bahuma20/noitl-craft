@@ -10,6 +10,7 @@ WORKDIR /app
 COPY . /app
 
 RUN composer install
+RUN php bin/console asset-map:compile --env=prod
 
 RUN wget https://get.symfony.com/cli/installer -O - | bash
 RUN mv /root/.symfony5/bin/symfony /usr/local/bin/symfony
