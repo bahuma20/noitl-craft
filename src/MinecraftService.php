@@ -20,7 +20,9 @@ class MinecraftService
 
         $this->k8s = $client
             ->withOptions([
-                'capath' => '/var/run/secrets/kubernetes.io/serviceaccount/ca.crt',
+//                'capath' => '/var/run/secrets/kubernetes.io/serviceaccount/ca.crt',
+                'verify_peer' => false,
+                'verify_host' => false,
                 'headers' => [
                     'Authorization' => 'Bearer ' . $token,
                 ],
