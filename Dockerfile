@@ -14,4 +14,4 @@ RUN composer install
 RUN wget https://get.symfony.com/cli/installer -O - | bash
 
 EXPOSE 8000
-CMD symfony server:start --port=8000
+CMD /root/.symfony5/bin/symfony server:start --port=8000
