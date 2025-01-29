@@ -47,7 +47,7 @@ class MinecraftService
         } catch (TransportExceptionInterface|ClientException $e) {
             print 'There was an error starting the server\n\n';
             print 'Exception: ' . $e->getMessage() . '\n\n';
-            print 'Status code: ' . $e->getStatusCode() . '\n\n';
+            print 'Status code: ' . $e->getResponse()->getStatusCode() . '\n\n';
             $content = $e->getResponse()->getContent(false);
             print 'Body: ' . $content . '\n\n';
             print 'Trace' . $e->getTraceAsString();
