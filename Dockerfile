@@ -15,4 +15,4 @@ RUN wget https://get.symfony.com/cli/installer -O - | bash
 RUN mv /root/.symfony5/bin/symfony /usr/local/bin/symfony
 
 EXPOSE 8000
-CMD symfony server:start --port=8000
+CMD symfony server:start --port=8000 --allow-all-ip
