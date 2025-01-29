@@ -42,7 +42,8 @@ class MinecraftService
             $response = $this->k8s->request('PATCH', '/apis/apps/v1/namespaces/' . $namespace . '/statefulsets/' . $statefulset, [
                 'headers' => [
                     'Content-Type' => 'application/strategic-merge-patch+json',
-                ]
+                ],
+                'body' => '{"spec":{"replicas":1}}'
             ]);
         } catch (TransportExceptionInterface|ClientException $e) {
             http_send_status(500);
