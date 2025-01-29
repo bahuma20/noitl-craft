@@ -1,3 +1,73 @@
+html {
+    font-family: sans-serif;
+    background: #ffe082;
+    color: #101010;
+}
+
 body {
-    background-color: skyblue;
+    padding: 1em;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+.page-title {
+    text-align: center;
+    text-transform: uppercase;
+    font-weight: bolder;
+    letter-spacing: 0.1em;
+    font-size: 2.5rem;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+.header-image {
+    width: 100%;
+    height: auto;
+    margin: 0 auto;
+    max-width: 600px;
+    display: block;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+}
+
+.server-status {
+    text-align: center;
+    background: #FFF;
+    padding: 1em;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, .24);
+}
+
+.server-status__label {
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-bottom: .5em;
+    font-size: 1.3rem;
+    color: #0288D1;
+}
+
+.server-status__value {
+    font-size: 1.3rem;
+}
+
+.server-status__action {
+    margin-top: 1em;
+}
+
+.server-status__action button {
+    background: none;
+    border: solid 1px #ddd;
+    padding: .7em 1em;
+    font-size: 1.1rem;
+    background: #0288d1;
+    color: #FFF;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.server-status__action button:hover,
+.server-status__action button:active {
+    background: #00527f;
 }

@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Noitl.Craft{% endblock %}
+
+{% block body %}
+    <img class="header-image" src="{{ asset('header.webp') }}" alt="Headerbild">
+    <h1 class="page-title">Noitl.Craft</h1>
+
+    <div class="server-status">
+        <div class="server-status__label">Server-Status</div>
+        <div class="server-status__value">{% if status.state.name == 'STOPPED' %}Ausgeschaltet{% elseif status.state.name == 'STARTING' %}Wird gestartet{% elseif status.state.name == 'RUNNING' %}Läuft ({{ status.playerCount }} Spieler online){% else %}Unbekannt{% endif %}</div>
+        {% if status.state.name == 'STOPPED' %}
+            <div class="server-status__action">
+            <form action="{{ path('start_server') }}" method="post">
+                <button>Server starten</button>
+            </form>
+            </div>{% endif %}
+    </div>
+
+{% endblock %}
