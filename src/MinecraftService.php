@@ -2,6 +2,8 @@
 
 namespace App;
 
+use Symfony\Component\HttpClient\Exception\ClientException;
+use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class MinecraftService
@@ -35,18 +37,20 @@ class MinecraftService
         $namespace = $_ENV['APP_NAMESPACE'];
         $statefulset = $_ENV['APP_STATEFULSET'];
 
-        $response = $this->k8s->request('PATCH', '/apis/apps/v1/namespaces/' . $namespace . '/statefulsets/' . $statefulset, [
-            'headers' => [
-                'Content-Type' => ' application/strategic-merge-patch+json',
-            ]
-        ]);
+        try {
 
-        $success = $response->getStatusCode() >= 200 && $response->getStatusCode() < 300;
-
-        if (!$success) {
+            $this->k8s->request('PATCH', '/apis/apps/v1/namespaces/' . $namespace . '/statefulsets/' . $statefulset, [
+                'headers' => [
+                    'Content-Type' => ' application/strategic-merge-patch+json',
+                ]
+            ]);
+        } catch (TransportExceptionInterface|ClientException $e) {
             print 'There was an error starting the server\n\n';
-            print 'Status code: ' . $response->getStatusCode() . '\n\n';
-            print 'Body: ' . $response->getContent() . '\n\n';
+            print 'Exception: ' . $e->getMessage() . '\n\n';
+            print 'Status code: ' . $e->getStatusCode() . '\n\n';
+            $content = $e->getResponse()->getContent(false);
+            print 'Body: ' . $content . '\n\n';
+            print 'Trace' . $e->getTraceAsString();
             die();
         }
     }
