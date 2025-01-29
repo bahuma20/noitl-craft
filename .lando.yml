@@ -1,0 +1,4 @@
+name: noitl-craft
+recipe: symfony
+config:
+  webroot: public
