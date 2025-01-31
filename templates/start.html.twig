@@ -8,13 +8,96 @@
 
     <div class="server-status">
         <div class="server-status__label">Server-Status</div>
-        <div class="server-status__value">{% if status.state.name == 'STOPPED' %}Ausgeschaltet{% elseif status.state.name == 'STARTING' %}Wird gestartet{% elseif status.state.name == 'RUNNING' %}Läuft ({{ status.playerCount }} Spieler online){% else %}Unbekannt{% endif %}</div>
-        {% if status.state.name == 'STOPPED' %}
-            <div class="server-status__action">
-            <form action="{{ path('start_server') }}" method="post">
-                <button>Server starten</button>
-            </form>
-            </div>{% endif %}
+        <div class="server-status__value">Laden...</div>
+        <div class="server-status__action is-hidden">
+            <button id="start-server-button">Server starten</button>
+        </div>
     </div>
+
+    <script>
+        const serverStatusState$ = document.querySelector('.server-status__value')
+        const serverStatusAction$ = document.querySelector('.server-status__action');
+        const startServerButton$ = document.getElementById('start-server-button');
+
+        let interval = false;
+
+
+        const getServerStatus = () => {
+            return fetch('/api/status').then(response => response.json());
+        }
+
+        const hideAction = () => {
+            serverStatusAction$.classList.add('is-hidden')
+        }
+
+        const showAction = () => {
+            serverStatusAction$.classList.remove('is-hidden')
+        }
+
+        const updateServerStatus = () => {
+            getServerStatus()
+                .then(status => {
+                    switch (status.state) {
+                        case 'STOPPED':
+                            serverStatusState$.innerText = 'Ausgeschaltet';
+                            showAction();
+                            break;
+                        case 'STARTING':
+                            serverStatusState$.innerText = 'Wird gestartet';
+                            hideAction();
+                            break;
+                        case 'RUNNING':
+                            serverStatusState$.innerText = `Läuft... (${status.playerCount} Spieler online)`
+                            hideAction()
+                            break;
+                    }
+                })
+                .catch(err => {
+                    hideAction();
+                    serverStatusState$.innerText = 'Kann nicht geladen werden...'
+                })
+        }
+
+        const startInterval = () => {
+            interval = setInterval(() => {
+                updateServerStatus();
+            }, 5000)
+        }
+
+        startServerButton$.addEventListener('click', e => {
+            e.preventDefault();
+
+            hideAction();
+            clearInterval(interval);
+            serverStatusState$.innerText = 'Starten...'
+
+            fetch('/api/start-server', {
+                method: 'POST'
+            }).then(response => {
+                if (response.ok) {
+                    serverStatusState$.innerText = 'Start wird ausgeführt. Bitte warten.'
+                    setTimeout(startInterval, 5000)
+                } else {
+                    if (response.status === 429) {
+                        serverStatusState$.innerText = 'Der Server wurde gerade erst gestartet. Versuche es später erneut...'
+                    } else {
+                        serverStatusState$.innerText = 'Fehler beim Starten... Versuche es später erneut...'
+                    }
+                    
+                    startInterval()
+                }
+
+            }).catch(error => {
+                serverStatusState$.innerText = 'Fehler beim Starten... Versuche es später erneut...'
+                startInterval()
+            })
+        })
+
+        updateServerStatus();
+
+        startInterval()
+
+
+    </script>
 
 {% endblock %}

@@ -2,9 +2,9 @@
 
 namespace App;
 
-enum ServerState
+enum ServerState: string
 {
-    case STOPPED;
-    case STARTING;
-    case RUNNING;
+    case STOPPED = 'STOPPED';
+    case STARTING = 'STARTING';
+    case RUNNING = 'RUNNING';
 }

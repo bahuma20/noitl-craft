@@ -71,3 +71,7 @@ body {
 .server-status__action button:active {
     background: #00527f;
 }
+
+.is-hidden {
+    display: none;
+}
