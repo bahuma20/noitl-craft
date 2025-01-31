@@ -55,4 +55,12 @@ class ApiController extends AbstractController
             'status' => 'OK'
         ]);
     }
+
+    #[Route('/api/metrics', name: 'api_metrics', methods: ['GET'])]
+    function metrics(): Response
+    {
+        return new JsonResponse([
+            'playerCount' => $this->minecraftService->getPlayerCount()
+        ]);
+    }
 }

@@ -158,4 +158,9 @@ class MinecraftService
             }
         }
     }
+
+    public function getPlayerCount()
+    {
+        return $this->getMinecraftStatus()->playerCount;
+    }
 }
