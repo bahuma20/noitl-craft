@@ -43,6 +43,16 @@ class MinecraftService
 
     public function start()
     {
+        $this->scaleReplicaset(1);
+    }
+
+    public function stop()
+    {
+        $this->scaleReplicaset(0);
+    }
+
+    protected function scaleReplicaset(int $replicas)
+    {
         $namespace = $this->config->getKubernetesNamespace();
         $statefulset = $this->config->getKubernetesStatefulsetName();
 
@@ -51,7 +61,7 @@ class MinecraftService
                 'headers' => [
                     'Content-Type' => 'application/strategic-merge-patch+json',
                 ],
-                'body' => '{"spec":{"replicas":1}}'
+                'body' => '{"spec":{"replicas":' . $replicas . '}}'
             ]);
         } catch (TransportExceptionInterface|ClientException $e) {
             http_send_status(500);

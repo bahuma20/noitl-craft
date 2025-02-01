@@ -56,6 +56,16 @@ class ApiController extends AbstractController
         ]);
     }
 
+    #[Route('/api/stop-server', name: 'api_stop_server', methods: ['POST'])]
+    function stopServer(): Response
+    {
+        $this->minecraftService->stop();
+
+        return new JsonResponse([
+            'status' => 'OK'
+        ]);
+    }
+
     #[Route('/api/metrics', name: 'api_metrics', methods: ['GET'])]
     function metrics(): Response
     {
