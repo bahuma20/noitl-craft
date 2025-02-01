@@ -6,13 +6,50 @@
     <img class="header-image" src="{{ asset('header.webp') }}" alt="Headerbild">
     <h1 class="page-title">Noitl.Craft</h1>
 
-    <div class="server-status">
-        <div class="server-status__label">Server-Status</div>
-        <div class="server-status__value">Laden...</div>
-        <div class="server-status__action is-hidden">
-            <button id="start-server-button">Server starten</button>
+    <div class="cards">
+        <div class="card">
+            <div class="card__title">Server-Status</div>
+            <div class="card__content">
+                <div class="server-status__value">Laden...</div>
+                <div class="server-status__action is-hidden">
+                    <button id="start-server-button">Server starten</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card__title">Voice-Chat</div>
+            <div class="card__content">
+                <p>
+                    Für Voice-Chat gibt es einen Discord-Channel, dem jeder beitreten kann.
+                </p>
+                <p>
+                    <a class="button" href="https://discord.gg/A5xrchQF">Zum Discord</a>
+                </p>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card__title">Informationen</div>
+            <div class="card__content">
+                <p>
+                    <strong>Erforderliche Minecraft-Version:</strong><br>
+                    <code>1.21.3</code>
+                </p>
+                <p>
+                    <strong>Server-Adresse:</strong><br>
+                    <code>craft.noitl.space</code>
+                </p>
+                <p>Der Server wird automatisch gestoppt, wenn für 5 Minuten keine Spieler online waren und muss dann
+                    über den Button auf dieser Seite gestartet werden.</p>
+                <p>Auf dem Server sind alle bisherigen Dörfer durch Portale erreichbar.</p>
+                <p>Nur Spieler, die auf der Whitelist stehen, können dem Server beitreten. Alle Spieler, die früher
+                    schon auf dem Kolping-Minecraft-Server gespielt haben, sind bereits auf der Whitelist.</p>
+                <p>Die Live-Map ist noch nicht verfügbar, wird aber später eingeschaltet.</p>
+            </div>
         </div>
     </div>
+
 
     <script>
         const serverStatusState$ = document.querySelector('.server-status__value')
@@ -83,7 +120,7 @@
                     } else {
                         serverStatusState$.innerText = 'Fehler beim Starten... Versuche es später erneut...'
                     }
-                    
+
                     startInterval()
                 }
 

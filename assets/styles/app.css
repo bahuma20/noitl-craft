@@ -2,6 +2,8 @@ html {
     font-family: sans-serif;
     background: #ffe082;
     color: #101010;
+    line-height: 1.4;
+    font-size: 18px;
 }
 
 body {
@@ -30,7 +32,22 @@ body {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
 }
 
-.server-status {
+.cards {
+    display: flex;
+    gap: 1em;
+}
+
+@media (max-width: 800px) {
+    .cards {
+        flex-direction: column;
+    }
+}
+
+.cards > .card {
+    flex: 1;
+}
+
+.card {
     text-align: center;
     background: #FFF;
     padding: 1em;
@@ -38,12 +55,16 @@ body {
     box-shadow: 0 0 10px rgba(0, 0, 0, .24);
 }
 
-.server-status__label {
+.card__title {
     font-weight: bold;
     text-transform: uppercase;
     margin-bottom: .5em;
     font-size: 1.3rem;
     color: #0288D1;
+}
+
+.card__content {
+
 }
 
 .server-status__value {
@@ -55,20 +76,27 @@ body {
 }
 
 .server-status__action button {
+    font-size: 1.1rem;
+}
+
+.button,
+button {
     background: none;
     border: solid 1px #ddd;
     padding: .7em 1em;
-    font-size: 1.1rem;
     background: #0288d1;
     color: #FFF;
     font-weight: bold;
     border-radius: 5px;
     cursor: pointer;
     transition: 0.3s;
+    text-decoration: none;
 }
 
-.server-status__action button:hover,
-.server-status__action button:active {
+.button:hover,
+.button:active,
+button:hover,
+button:active {
     background: #00527f;
 }
 
