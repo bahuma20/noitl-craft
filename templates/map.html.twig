@@ -5,5 +5,10 @@
 {% block bodyclass %}map-page{% endblock %}
 
 {% block body %}
-    <iframe src="https://craft-map.noitl.space" class="map__iframe"></iframe>
+    <div class="map">
+        <div class="map__index">
+            {% include "mapindex.html.twig" %}
+        </div>
+        <iframe src="https://craft-map.noitl.space" class="map__iframe" name="map"></iframe>
+    </div>
 {% endblock %}

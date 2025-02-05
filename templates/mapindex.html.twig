@@ -1,0 +1,201 @@
+<style>
+    #mapIndexMount > ul > li,
+    #mapIndexMount > ul > ul > li {
+        font-weight: bold;
+        margin-top: 2em;
+    }
+
+    #mapIndexMount > ul > ul > li {
+        margin-bottom: 10px;
+    }
+
+    #mapIndexMount > ul > ul > li > a {
+        color: #FFFF33;
+        padding: 5px 10px;
+        background: #a1a1a1;
+    }
+
+    #mapIndexMount a,
+    #mapIndexMount a:active,
+    #mapIndexMount a:focus {
+        color: #131313;
+        text-decoration: none;
+    }
+
+    #mapIndexMount a:after {
+        content: " »";
+    }
+
+    #mapIndexMount a:hover {
+        text-decoration: underline;
+    }
+
+    #mapIndexMount img {
+        width: 16px;
+        position: absolute;
+        left: 0;
+        display: block;
+        top: 3px;
+    }
+
+    #mapIndexMount ul ul li {
+        list-style: none;
+    }
+
+    #mapIndexMount ul ul {
+        padding-left: 10px;
+    }
+
+    #mapIndexMount ul ul ul {
+        padding-left: 0;
+    }
+
+    #mapIndexMount > ul > li {
+        display: block;
+        background: black;
+        color: #FFF;
+        padding: 5px 10px;
+        text-align: center;
+    }
+
+    #mapIndexMount > ul {
+        padding-left: 0;
+    }
+
+    #mapIndexMount > ul > li {
+        display: block;
+        background: black;
+        color: #FFF;
+        padding: 5px 10px;
+        text-align: center;
+    }
+
+    #mapIndexMount > ul {
+        padding-left: 0;
+    }
+
+    #mapIndexMount > ul > ul > ul > li {
+        padding-left: 23px;
+        position: relative;
+        display: block;
+        margin-bottom: .25em;
+    }
+</style>
+
+<div id="mapIndexMount"></div>
+
+<script>
+    async function init() {
+        const baseUrl = "https://craft-map.noitl.space";
+
+        let res = await fetch(
+            `${baseUrl}/up/configuration`
+        );
+        let config = await res.json();
+
+        let promises = [];
+        config.worlds.forEach((world) => {
+            promises.push(
+                fetch(
+                    `${baseUrl}/tiles/_markers_/marker_${world.name}.json`
+                ).then((response) => response.json())
+            );
+        });
+
+        let structuredData = [];
+
+        await Promise.all(promises).then((data) => {
+            config.worlds.forEach((world, index) => {
+                let markerData = data[index];
+
+                let structuredWorldData = {
+                    name: world.name,
+                    title: world.title,
+                    regions: {
+                        other: {
+                            id: "other",
+                            title: "Sonstige",
+                            markers: [],
+                        },
+                    },
+                };
+
+                for (let ind in markerData.sets.markers.circles) {
+                    if (markerData.sets.markers.circles.hasOwnProperty(ind)) {
+                        let circle = markerData.sets.markers.circles[ind];
+
+                        structuredWorldData.regions[ind] = {
+                            id: ind,
+                            title: circle.label,
+                            color: circle.color,
+                            x: circle.x,
+                            y: circle.y,
+                            z: circle.z,
+                            markers: [],
+                        };
+                    }
+                }
+
+                for (let ind in markerData.sets.markers.markers) {
+                    if (markerData.sets.markers.markers.hasOwnProperty(ind)) {
+                        let marker = markerData.sets.markers.markers[ind];
+
+                        let parts = ind.split("__");
+                        let region = "other";
+
+                        if (parts.length > 1) {
+                            region = parts[0];
+                        }
+
+                        marker.id = ind;
+
+                        structuredWorldData.regions[region].markers.push(marker);
+                    }
+                }
+
+                structuredData.push(structuredWorldData);
+            });
+        });
+
+        let output = "<ul>";
+
+        structuredData.forEach((world) => {
+            output += `<li>${world.title}</li><ul>`;
+
+            Object.values(world.regions).forEach((region) => {
+                console.log(region);
+
+                if (region.hasOwnProperty("x")) {
+                    output += `<li>
+                <a href="${baseUrl}/?worldname=${world.name}&mapname=flat&zoom=4&x=${region.x}&y=${region.y}&z=${region.z}"
+                   target="map"
+                   style="color: ${region.color}">${region.title}</a>
+              </li>`;
+                } else {
+                    output += `<li>${region.title}</li>`;
+                }
+
+                output += "<ul>";
+
+                region.markers.sort((a, b) => a.label.localeCompare(b.label)).forEach((marker) => {
+                    output += `<li>
+                <img src="${baseUrl}/tiles/_markers_/${marker.icon}.png" alt="">
+                <a href="${baseUrl}/?worldname=${world.name}&mapname=flat&zoom=6&x=${marker.x}&y=${marker.y}&z=${marker.z}" target="map" title="${marker.id}">${marker.label}</a>
+              </li>`;
+                });
+
+                output += "</ul>";
+            });
+
+            output += "</ul>";
+        });
+
+        output += "</ul>";
+
+        document.querySelector("#mapIndexMount").innerHTML = output;
+    }
+
+    init();
+</script>
+</body>
+</html>

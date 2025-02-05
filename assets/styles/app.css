@@ -117,10 +117,19 @@ body.map-page {
     margin: 0;
 }
 
-.map__iframe {
-    border: none;
-    width: 100%;
+.map {
+    display: flex;
+    flex-direction: row;
     height: 99vh;
+}
+
+.map__index {
+    overflow-y: scroll;
+}
+
+.map__iframe {
+    flex: 1;
+    border: none;
 }
 
 .material-icons {

@@ -9,8 +9,8 @@ use Symfony\Component\Routing\Attribute\Route;
 class MapController extends AbstractController
 {
 
-    #[Route('/map', name: 'map_index', methods: ['GET'])]
-    public function index(): Response
+    #[Route('/map', name: 'map_page', methods: ['GET'])]
+    public function page(): Response
     {
         return $this->render('map.html.twig');
     }
