@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>{% block title %}Noitl.Craft{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
     {% block stylesheets %}
     {% endblock %}
@@ -12,7 +13,7 @@
         {% block importmap %}{{ importmap('app') }}{% endblock %}
     {% endblock %}
 </head>
-<body>
+<body class="{% block bodyclass %}{% endblock %}">
 {% block body %}{% endblock %}
 </body>
 </html>
