@@ -9,7 +9,7 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 WORKDIR /app
 COPY . /app
 
-RUN composer install
+RUN composer install --ignore-platform-reqs
 RUN php bin/console asset-map:compile --env=prod
 
 RUN wget https://get.symfony.com/cli/installer -O - | bash
