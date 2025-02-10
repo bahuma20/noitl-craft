@@ -44,7 +44,8 @@
         "symfony/yaml": "7.2.*",
         "twig/extra-bundle": "^2.12|^3.0",
         "twig/twig": "^2.12|^3.0",
-        "xpaw/php-minecraft-query": "^5.0"
+        "xpaw/php-minecraft-query": "^5.0",
+        "ext-http": "*"
     },
     "config": {
         "allow-plugins": {

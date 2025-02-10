@@ -75,6 +75,12 @@ body {
     flex-direction: column;
 }
 
+@media (min-width: 800px) {
+    .server-status {
+        max-width: 25%;
+    }
+}
+
 .server-status__value {
     font-size: 1.3rem;
 }
@@ -145,4 +151,43 @@ body.map-page {
 
 .material-icons {
     transform: translateY(13%);
+}
+
+.server-status__players {
+    display: flex;
+    flex-direction: row;
+    gap: .2em;
+    margin-top: 1em;
+    justify-content: center;
+}
+
+.server-status__players img {
+    width: 100%;
+    max-width: 42px;
+    height: auto;
+}
+
+.server-status__players__item {
+    position: relative;
+}
+
+.server-status__players__name {
+    opacity: 0;
+    visibility: hidden;
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%) translateY(50%);
+    font-size: .8rem;
+    background: #000;
+    color: #FFF;
+    border-radius: 3px;
+    padding: .1rem .3rem;
+    transition: 0.3s;
+    z-index: 499;
+}
+
+.server-status__players__item:hover .server-status__players__name {
+    opacity: 1;
+    visibility: visible;
 }

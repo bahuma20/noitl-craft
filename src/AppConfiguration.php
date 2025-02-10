@@ -10,14 +10,14 @@ class AppConfiguration
     private string $kubernetesStatefulsetName;
 
     private string $minecraftServerAddress;
-    private string $minecraftServerPort;
+    private int $minecraftServerPort;
 
     public function __construct()
     {
         $this->kubernetesNamespace = $this->getRequiredEnv('APP_KUBERNETES_NAMESPACE');
         $this->kubernetesStatefulsetName = $this->getRequiredEnv('APP_KUBERNETES_STATEFULSET_NAME');
         $this->minecraftServerAddress = $this->getRequiredEnv('APP_MINECRAFT_SERVER_ADDRESS');
-        $this->minecraftServerPort = $this->getRequiredEnv('APP_MINECRAFT_SERVER_PORT');
+        $this->minecraftServerPort = intval($this->getRequiredEnv('APP_MINECRAFT_SERVER_PORT'));
 
         $this->isDevMode = $this->getRequiredEnv('APP_ENV') == 'dev';
     }
@@ -48,7 +48,7 @@ class AppConfiguration
         return $this->minecraftServerAddress;
     }
 
-    public function getMinecraftServerPort(): string
+    public function getMinecraftServerPort(): int
     {
         return $this->minecraftServerPort;
     }

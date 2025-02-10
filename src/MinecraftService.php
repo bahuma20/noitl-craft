@@ -9,9 +9,8 @@ use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
-use xPaw\MinecraftPing;
-use xPaw\MinecraftPingException;
 use xPaw\MinecraftQuery;
+use xPaw\MinecraftQueryException;
 
 class MinecraftService
 {
@@ -57,7 +56,7 @@ class MinecraftService
         $statefulset = $this->config->getKubernetesStatefulsetName();
 
         try {
-            $response = $this->k8s->request('PATCH', '/apis/apps/v1/namespaces/' . $namespace . '/statefulsets/' . $statefulset, [
+            $this->k8s->request('PATCH', '/apis/apps/v1/namespaces/' . $namespace . '/statefulsets/' . $statefulset, [
                 'headers' => [
                     'Content-Type' => 'application/strategic-merge-patch+json',
                 ],
@@ -83,23 +82,23 @@ class MinecraftService
         switch ($kubernetesStatus) {
             case KubernetesState::STOPPING:
             case KubernetesState::STOPPED:
-                return new ServerStatus(ServerState::STOPPED, 0);
+                return new ServerStatus(ServerState::STOPPED, 0, []);
             case KubernetesState::RUNNING:
                 $minecraftStatus = $this->getMinecraftStatus();
                 $this->logger->debug('Minecraft status | state: ' . $minecraftStatus->state->name . ' playerCount: ' . $minecraftStatus->playerCount);
 
                 switch ($minecraftStatus->state) {
                     case MinecraftState::AVAILABLE:
-                        return new ServerStatus(ServerState::RUNNING, $minecraftStatus->playerCount);
+                        return new ServerStatus(ServerState::RUNNING, $minecraftStatus->playerCount, $minecraftStatus->players);
                     case MinecraftState::UNAVAILABLE:
-                        return new ServerStatus(ServerState::STARTING, 0);
+                        return new ServerStatus(ServerState::STARTING, 0, []);
                 }
                 break;
             case KubernetesState::STARTING:
-                return new ServerStatus(ServerState::STARTING, 0);
+                return new ServerStatus(ServerState::STARTING, 0, []);
         }
 
-        return new ServerStatus(ServerState::STOPPED, 0);
+        return new ServerStatus(ServerState::STOPPED, 0, []);
     }
 
     protected function getKubernetesStatus(): KubernetesState
@@ -155,17 +154,13 @@ class MinecraftService
         $serverPort = $this->config->getMinecraftServerPort();
 
         try {
-            $query = new MinecraftPing($serverAddress, $serverPort);
-            $result = $query->Query();
+            $this->query->Connect($serverAddress, $serverPort);
+            $players = $this->query->getPlayers();
 
-            return new MinecraftStatus(MinecraftState::AVAILABLE, $result['players']['online']);
-        } catch (MinecraftPingException $e) {
+            return new MinecraftStatus(MinecraftState::AVAILABLE, count($players), $players);
+        } catch (MinecraftQueryException $e) {
             $this->logger->warning('Error getting MinecraftStatus: ' . $e->getMessage(), ['exception' => $e]);
-            return new MinecraftStatus(MinecraftState::UNAVAILABLE, 0);
-        } finally {
-            if (isset($query)) {
-                $query->close();
-            }
+            return new MinecraftStatus(MinecraftState::UNAVAILABLE, 0, []);
         }
     }
 

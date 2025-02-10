@@ -15,6 +15,7 @@
                     <button id="start-server-button"><span class="material-icons">play_arrow</span> Server starten
                     </button>
                 </div>
+                <div class="server-status__players is-hidden"></div>
             </div>
         </div>
 
@@ -34,7 +35,6 @@
                 <p>Auf dem Server sind alle bisherigen Dörfer durch Portale erreichbar.</p>
                 <p>Nur Spieler, die auf der Whitelist stehen, können dem Server beitreten. Alle Spieler, die früher
                     schon auf dem Kolping-Minecraft-Server gespielt haben, sind bereits auf der Whitelist.</p>
-                <p>Die Live-Map ist noch nicht verfügbar, wird aber später eingeschaltet.</p>
             </div>
         </div>
 
@@ -81,6 +81,7 @@
     <script>
         const serverStatusState$ = document.querySelector('.server-status__value')
         const serverStatusAction$ = document.querySelector('.server-status__action');
+        const serverStatusPlayers$ = document.querySelector('.server-status__players');
         const startServerButton$ = document.getElementById('start-server-button');
         const mapButton$ = document.getElementById('map-button');
         const mapButtonHint$ = document.getElementById('map-button-hint')
@@ -100,6 +101,26 @@
             serverStatusAction$.classList.remove('is-hidden')
         }
 
+        const showPlayers = (players) => {
+            serverStatusPlayers$.classList.remove('is-hidden')
+            let avatars = players.map(player => {
+                return `
+<div class="server-status__players__item">
+    <img
+        src="https://mc-heads.net/body/${player}/40.png"
+        alt="Avatar von ${player}">
+    <div class="server-status__players__name">${player}</div>
+</div>
+                `
+            });
+
+            serverStatusPlayers$.innerHTML = avatars.join("");
+        }
+
+        const hidePlayers = () => {
+            serverStatusPlayers$.classList.add('is-hidden')
+        }
+
         const disableMapButton = () => {
             mapButton$.classList.add('disabled')
             mapButtonHint$.classList.remove('is-hidden')
@@ -117,16 +138,19 @@
                         case 'STOPPED':
                             serverStatusState$.innerText = 'Ausgeschaltet';
                             showAction();
+                            hidePlayers();
                             disableMapButton();
                             break;
                         case 'STARTING':
                             serverStatusState$.innerText = 'Wird gestartet';
                             hideAction();
+                            hidePlayers();
                             disableMapButton();
                             break;
                         case 'RUNNING':
-                            serverStatusState$.innerText = `Läuft... (${status.playerCount} Spieler online)`
-                            hideAction()
+                            serverStatusState$.innerHTML = `Läuft...<br><small>(${status.playerCount} Spieler online)</small>`
+                            hideAction();
+                            showPlayers(status.players);
                             enableMapButton();
                             break;
                     }
