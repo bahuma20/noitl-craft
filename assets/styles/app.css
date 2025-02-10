@@ -126,7 +126,7 @@ button[disabled]:hover {
 }
 
 .is-hidden {
-    display: none;
+    display: none !important;
 }
 
 body.map-page {
