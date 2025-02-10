@@ -18,9 +18,7 @@ class StartController extends AbstractController
     #[Route('/', name: 'start')]
     public function start()
     {
-        return $this->render('start.html.twig', [
-            'status' => $this->minecraftService->getStatus(),
-        ]);
+        return $this->render('start.html.twig');
     }
 
     #[Route('/start-server', name: 'start_server', methods: ['POST'])]
