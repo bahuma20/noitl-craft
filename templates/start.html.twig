@@ -47,7 +47,12 @@
                         Spieler unterwegs sind.
                     </p>
                     <p>
-                        <a class="button" href="{{ path('map_page') }}" target="_blank">Zur Map</a>
+                        <a class="button" href="{{ path('map_page') }}" target="_blank" id="map-button">Zur Map</a>
+                    <div class="is-hidden" id="map-button-hint" style="margin-top: 1em">
+                        <small>
+                            <em>(Nur verfügbar wenn der Server läuft)</em>
+                        </small>
+                    </div>
                     </p>
                 </div>
             </div>
@@ -77,6 +82,8 @@
         const serverStatusState$ = document.querySelector('.server-status__value')
         const serverStatusAction$ = document.querySelector('.server-status__action');
         const startServerButton$ = document.getElementById('start-server-button');
+        const mapButton$ = document.getElementById('map-button');
+        const mapButtonHint$ = document.getElementById('map-button-hint')
 
         let interval = false;
 
@@ -93,6 +100,16 @@
             serverStatusAction$.classList.remove('is-hidden')
         }
 
+        const disableMapButton = () => {
+            mapButton$.classList.add('disabled')
+            mapButtonHint$.classList.remove('is-hidden')
+        }
+
+        const enableMapButton = () => {
+            mapButton$.classList.remove('disabled')
+            mapButtonHint$.classList.add('is-hidden')
+        }
+
         const updateServerStatus = () => {
             getServerStatus()
                 .then(status => {
@@ -100,14 +117,17 @@
                         case 'STOPPED':
                             serverStatusState$.innerText = 'Ausgeschaltet';
                             showAction();
+                            disableMapButton();
                             break;
                         case 'STARTING':
                             serverStatusState$.innerText = 'Wird gestartet';
                             hideAction();
+                            disableMapButton();
                             break;
                         case 'RUNNING':
                             serverStatusState$.innerText = `Läuft... (${status.playerCount} Spieler online)`
                             hideAction()
+                            enableMapButton();
                             break;
                     }
                 })

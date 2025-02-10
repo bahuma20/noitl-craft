@@ -108,6 +108,17 @@ button:active {
     background: #00527f;
 }
 
+.button.disabled,
+button.disabled,
+button[disabled],
+.button.disabled:hover,
+button.disabled:hover,
+button[disabled]:hover {
+    background: #0288d1;
+    opacity: 0.65;
+    cursor: default;
+}
+
 .is-hidden {
     display: none;
 }
