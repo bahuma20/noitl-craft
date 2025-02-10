@@ -157,7 +157,7 @@ class MinecraftService
             $this->query->Connect($serverAddress, $serverPort);
             $players = $this->query->getPlayers();
 
-            return new MinecraftStatus(MinecraftState::AVAILABLE, count($players), $players);
+            return new MinecraftStatus(MinecraftState::AVAILABLE, $players ? count($players) : 0, $players);
         } catch (MinecraftQueryException $e) {
             $this->logger->warning('Error getting MinecraftStatus: ' . $e->getMessage(), ['exception' => $e]);
             return new MinecraftStatus(MinecraftState::UNAVAILABLE, 0, []);
