@@ -74,7 +74,6 @@
             </div>
         </div>
     </div>
-    </div>
 
 
     <script>
@@ -154,7 +153,7 @@
                             break;
                     }
                 })
-                .catch(err => {
+                .catch(() => {
                     hideAction();
                     serverStatusState$.innerText = 'Kann nicht geladen werden...'
                 })
@@ -189,7 +188,7 @@
                     startInterval()
                 }
 
-            }).catch(error => {
+            }).catch(() => {
                 serverStatusState$.innerText = 'Fehler beim Starten... Versuche es später erneut...'
                 startInterval()
             })
