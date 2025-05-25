@@ -5,7 +5,7 @@ COPY . /var/www/html/
 
 USER 0
 
-RUN COMPSER_ALLOW_SUPERUSER=true composer install --ignore-platform-reqs
+RUN COMPOSER_ALLOW_SUPERUSER=1 composer install --ignore-platform-reqs
 RUN php bin/console asset-map:compile --env=prod
 
 RUN chmod g=rwx -R /var/www/html
