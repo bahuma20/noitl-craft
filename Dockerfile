@@ -1,22 +1,15 @@
-# Dockerfile
-FROM php:8.3-cli
+FROM jkaninda/nginx-php-fpm:8.3
+# Copy Laravel project files
+COPY . /var/www/html
+# Storage Volume
+#VOLUME /var/www/html/storage
 
-RUN apt-get update -y && apt-get install -y libmcrypt-dev unzip wget
+WORKDIR /var/www/html
 
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-#RUN docker-php-ext-install zip
+# Fix permissions
+RUN chown -R www-data:www-data /var/www/html
 
-WORKDIR /app
-COPY . /app
+USER www-data
 
 RUN composer install --ignore-platform-reqs
 RUN php bin/console asset-map:compile --env=prod
-
-RUN wget https://get.symfony.com/cli/installer -O - | bash
-RUN mv /root/.symfony5/bin/symfony /usr/local/bin/symfony
-
-ADD start.sh /
-RUN chmod +x /start.sh
-
-EXPOSE 8000
-CMD ["/start.sh"]
