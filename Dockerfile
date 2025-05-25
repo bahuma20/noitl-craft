@@ -2,6 +2,7 @@ FROM larueli/php-base-image:8.3
 
 # Copy Laravel project files
 COPY . /var/www/html/
+COPY site.conf /etc/apache2/sites-available/000-default.conf
 
 USER 0
 
