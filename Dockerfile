@@ -1,15 +1,13 @@
-FROM jkaninda/nginx-php-fpm:8.3
+FROM larueli/php-base-image:8.3
+
 # Copy Laravel project files
-COPY . /var/www/html
-# Storage Volume
-#VOLUME /var/www/html/storage
+COPY . /var/www/html/
 
-WORKDIR /var/www/html
-
-# Fix permissions
-RUN chown -R www-data:www-data /var/www/html
-
-USER www-data
+USER 0
 
 RUN composer install --ignore-platform-reqs
 RUN php bin/console asset-map:compile --env=prod
+
+RUN chmod g=rwx -R /var/www/html
+
+USER 1420:0
