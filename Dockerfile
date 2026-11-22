@@ -19,7 +19,8 @@ RUN composer install --no-dev --no-scripts --no-interaction --prefer-dist --opti
 # 4. Copy all local project files directly with www-data ownership
 COPY --chown=www-data:www-data . .
 
-# 5. Finalize autoloader, compile AssetMapper assets, and set www-data ownership on generated files
+# 5. Finalize autoloader, download importmap JS vendors, compile AssetMapper, and fix permissions
 RUN APP_ENV=prod composer dump-autoload --optimize --no-dev \
+    && php bin/console importmap:install --env=prod \
     && php bin/console asset-map:compile --env=prod \
     && chown -R www-data:www-data /var/www/html
